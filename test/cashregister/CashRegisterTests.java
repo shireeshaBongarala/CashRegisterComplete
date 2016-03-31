@@ -2,11 +2,9 @@ package cashregister;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class CashRegisterTests {
 
-    private String purchaseString = "";
+
 
     @Test
     public void shouldPrintThePurchaseInformation() {
@@ -17,14 +15,17 @@ public class CashRegisterTests {
 
         cashRegister.process(purchase);
 
-        assertEquals(purchaseString, purchase.asString());
+        mockPrinter.verifyThatPrintIsCalledWithString(purchase.asString());
     }
 
-    class MockPrinter extends Printer{
+    @Test
+    public void shouldPrintThePurchaseInformationWithoutTestingPurchaseAsStringMethod(){
+        MockPrinter mockPrinter = new MockPrinter();
+        CashRegister cashRegister = new CashRegister(mockPrinter);
+        PurchaseStub purchaseStub = new PurchaseStub();
 
-        @Override
-        public void print(String printThis) {
-            purchaseString = printThis;
-        }
+        cashRegister.process(purchaseStub);
+
+        mockPrinter.verifyThatPrintIsCalledWithString(purchaseStub.asString());
     }
 }
